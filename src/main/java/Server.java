@@ -1,8 +1,9 @@
+import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Date;
 
 public class Server {
 
@@ -12,17 +13,24 @@ public class Server {
 
             while (true) {
                 Socket socket1 = serverSocket.accept();
-                System.out.println("accepted connection");
-                Writer writer = new OutputStreamWriter(socket1.getOutputStream(), "UTF8");
-                String text = "hello";
-                writer.write("HTTP/1.1 200 OK\n" +
-                        "Server: Lowleveling 1\n" +
-                        "Content-Length: " + text.getBytes().length + "\n" +
-                        "Connection: close\n" +
-                        "Content-Type: text/plain\n");
-                writer.write(text);
-                writer.flush();
-                writer.close();
+                System.out.println("accepted connection from client");
+
+                BufferedOutputStream dataOut = new BufferedOutputStream(socket1.getOutputStream());
+                String content = "hello world " + new Date();
+                byte[] bytes = content.getBytes("UTF-8");
+
+                PrintWriter out = new PrintWriter(socket1.getOutputStream());
+                out.println("HTTP/1.1 200 OK");
+                out.println("Server: Simple Server: 1.0");
+                out.println("Date: " + new Date());
+                out.println("Content-type: text/plain");
+                out.println("Content-length: " + bytes.length);
+                out.println(); // blank line between headers and content, very important !
+                out.flush();
+
+                // send text via bytes
+                dataOut.write(bytes, 0, bytes.length);
+                dataOut.flush();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
