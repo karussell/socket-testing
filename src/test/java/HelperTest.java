@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class HelperTest {
 
@@ -24,16 +24,7 @@ public class HelperTest {
 
     @Test
     public void emptyNull() {
-        try {
-            new Helper(null).count("");
-            assertTrue(false);
-        } catch (Exception ex) {
-            assertTrue(ex instanceof IllegalArgumentException, ex.getMessage());
-        }
-//        assertThrows(IllegalArgumentException.class,
-//                () -> new Helper(null).count(""));
-//
-//        assertThrows(IllegalArgumentException.class,
-//                () -> new Helper("").count(null));
+        assertThrows(IllegalArgumentException.class,
+                () -> new Helper("").count(null));
     }
 }
