@@ -13,26 +13,33 @@ public class Server {
 
             while (true) {
                 Socket socket1 = serverSocket.accept();
-                System.out.println("accepted connection from client");
+                Thread thread = new Thread(() -> {
+                    try {
+                        System.out.println(new Date() + " accepted connection from client");
 
-                BufferedOutputStream dataOut = new BufferedOutputStream(socket1.getOutputStream());
+                        BufferedOutputStream dataOut = new BufferedOutputStream(socket1.getOutputStream());
 
-                Thread.sleep(5000);
-                String content = "hello world " + new Date();
-                byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
+                        Thread.sleep(5000);
+                        String content = "hello world " + new Date();
+                        byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
 
-                PrintWriter out = new PrintWriter(socket1.getOutputStream());
-                out.println("HTTP/1.1 200 OK");
-                out.println("Server: Simple Server: 1.0");
-                out.println("Date: " + new Date());
-                out.println("Content-type: text/plain");
-                out.println("Content-length: " + bytes.length);
-                out.println(); // blank line between headers and content, very important !
-                out.flush();
+                        PrintWriter out = new PrintWriter(socket1.getOutputStream());
+                        out.println("HTTP/1.1 200 OK");
+                        out.println("Server: Simple Server: 1.0");
+                        out.println("Date: " + new Date());
+                        out.println("Content-type: text/plain");
+                        out.println("Content-length: " + bytes.length);
+                        out.println(); // blank line between headers and content, very important !
+                        out.flush();
 
-                // send text via bytes
-                dataOut.write(bytes, 0, bytes.length);
-                dataOut.flush();
+                        // send text via bytes
+                        dataOut.write(bytes, 0, bytes.length);
+                        dataOut.flush();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                thread.start();
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
