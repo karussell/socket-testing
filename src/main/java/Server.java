@@ -1,8 +1,8 @@
 import java.io.BufferedOutputStream;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 public class Server {
@@ -16,8 +16,10 @@ public class Server {
                 System.out.println("accepted connection from client");
 
                 BufferedOutputStream dataOut = new BufferedOutputStream(socket1.getOutputStream());
+
+                Thread.sleep(5000);
                 String content = "hello world " + new Date();
-                byte[] bytes = content.getBytes("UTF-8");
+                byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
 
                 PrintWriter out = new PrintWriter(socket1.getOutputStream());
                 out.println("HTTP/1.1 200 OK");
@@ -32,7 +34,7 @@ public class Server {
                 dataOut.write(bytes, 0, bytes.length);
                 dataOut.flush();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
