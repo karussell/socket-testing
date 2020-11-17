@@ -4,16 +4,19 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
 
     public void start() {
         try {
             ServerSocket serverSocket = new ServerSocket(8900);
+            ExecutorService service = Executors.newFixedThreadPool(5);
 
             while (true) {
                 Socket socket1 = serverSocket.accept();
-                Thread thread = new Thread(() -> {
+                service.submit(() -> {
                     try {
                         System.out.println(new Date() + " accepted connection from client");
 
@@ -39,7 +42,6 @@ public class Server {
                         throw new RuntimeException(e);
                     }
                 });
-                thread.start();
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
