@@ -1,13 +1,9 @@
 import java.util.List;
 
-public class Helper {
-    String str;
+public class Helper implements Sorter {
 
-    public Helper(String str) {
-        this.str = str;
-    }
-
-    public static void sort(List<Integer> list) {
+    @Override
+    public void sort(List<Integer> list) {
         boolean unsorted = false;
 
         while(!unsorted) {
@@ -21,16 +17,5 @@ public class Helper {
                 }
             }
         }
-    }
-
-    public int count(String substring) {
-        if (substring == null || substring.isEmpty())
-            throw new IllegalArgumentException("substring cannot be null or empty");
-        int count = 0;
-        for (int i = 0; i < str.length(); i++) {
-            if (str.startsWith(substring, i))
-                count++;
-        }
-        return count;
     }
 }
